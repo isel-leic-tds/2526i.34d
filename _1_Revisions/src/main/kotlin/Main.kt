@@ -14,6 +14,46 @@ fun main() {
     _5_testIfsAndWhens()
 
     _6_testCollections()
+
+    _7_testLoops()
+
+    _8_testFunctions()
+
+    _9_testLambdas()
+
+    _10_testClasses()
+}
+
+private fun _01_helloWorld() {
+    val name = "Kotlin"
+    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
+    // to see how IntelliJ IDEA suggests fixing it.
+    println("Hello, " + name + "!")
+
+    for (i in 1..5) {
+        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
+        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
+        println("i = $i")
+    }
+}
+
+fun _2_testValAndVars() {
+    val a =1
+//    a=2 // Error: Val cannot be reassigned
+    var b = 1
+    b = 2
+    println("a=$a, b=$b")
+
+    class MyComplexA {
+        val a = 1
+        var b = 2
+    }
+    val myComplexA = MyComplexA()
+//    myComplexA.a = 11
+    myComplexA.b = 3
+
+    println("myComplexA.a: ${myComplexA.a}, myComplexA.b: ${myComplexA.b}")
+
 }
 
 fun _3_testBasicTypes() {
@@ -154,38 +194,6 @@ fun _31_testNumericTypes() {
     //Real values
     val realValue = 2.3e4        // Inferred as Double
     println("realValue = $realValue")
-}
-
-private fun _01_helloWorld() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
-
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
-    }
-}
-
-fun _2_testValAndVars() {
-    val a =1
-//    a=2 // Error: Val cannot be reassigned
-    var b = 1
-    b = 2
-    println("a=$a, b=$b")
-
-    class MyComplexA {
-        val a = 1
-        var b = 2
-    }
-    val myComplexA = MyComplexA()
-//    myComplexA.a = 11
-    myComplexA.b = 3
-
-    println("myComplexA.a: ${myComplexA.a}, myComplexA.b: ${myComplexA.b}")
-
 }
 
 fun _4_testRanges() {
@@ -350,3 +358,253 @@ fun _6_testCollections() {
 
 
 }
+
+fun _7_testLoops() {
+    //for
+    for(i in 0 ..< 5) print("$i ")            // --> 0 1 2 3 4
+    println()
+
+    for(n in listOf("Pedro","Ana","Maria")) print("$n ") // --> Pedro Ana Maria
+    println()
+
+    for(letter in "Kotlin") print("$letter ")  // --> K o t l i n
+    println()
+
+    //while
+    var remaining = 3
+    while(remaining > 0) {
+        print("Falta $remaining ") // --> Falta 3 Falta 2 Falta 1
+        remaining--   // Same as: remaining = remaining - 1 or remaining -= 1
+    }
+    while (remaining > 0)
+        println("Acabou.") // Nunca será executado
+
+    println()
+
+    //do while
+    var count = 0
+    do {
+        count++
+        print("$count ")
+    } while (count <= 3) // --> 1 2 3 4
+    println()
+
+    do println("Ok") while (count < 1) // --> Ok
+    println()
+
+    listOf("Pedro","Ana","Maria").forEach(::println)
+    listOf("Pedro","Ana","Maria").forEach( { println(it) })
+    listOf("Pedro","Ana","Maria").forEach { println(it) } //doesn't need parenthesis if its the last parameter. Trailing function.
+
+}
+
+fun _8_testFunctions() {
+//    _8_testFunctions_readName()
+
+    //Calling functions that return Unit
+    hello1()    // --> Hello, World!
+    hello2()    // --> Hello, World!
+    hello3()    // --> Hello, World!
+
+    //Expression functions
+    println(max1(1,2))
+    println(max2(1,2))
+    println(max3(1,2))
+
+    //Extension functions
+    println(hasInString("Hello, World!",'o')) // --> true
+    println("Hello, World!".has('l')) // --> true
+
+    //Better implementation
+    println(hasInString2("Hello, World!",'o')) // --> true
+    println("Hello, World!".has2('l')) // --> true
+}
+
+fun hasInString(text: String, symbol: Char): Boolean {
+    for (c in text)
+        if (c == symbol) return true
+    return false
+}
+
+fun String.has(symbol: Char): Boolean {
+    for (c in this)   // this refers to the string itself.
+        if (c == symbol) return true
+    return false
+}
+
+fun hasInString2(text: String, symbol: Char)  = text.contains(symbol)
+fun String.has2(symbol: Char) = this.contains(symbol)
+fun String.has3(symbol: Char) = contains(symbol) // 'this' can be omitted
+
+private fun _8_testFunctions_readName() {
+    val person = "Maria"
+    val age = readAge(person, 18)  // Call the function and save the value.
+    println("$person are $age years old.")
+
+    //named arguments
+//    val age = readAge(18, person)                // Error: Arguments in wrong order.
+    val age1 = readAge(person, default = 18)       // First argument by order.
+    println("$person are $age1 years old.")
+    val age2 = readAge(default = 18, name = person) // All arguments by name.
+    println("$person are $age2 years old.")
+
+    //Calling after setting default function parameter defaults
+    val age3 = readAge(person)        // First by order and second omitted.
+    println("$person are $age3 years old.")
+    val age4 = readAge(name = person) // First by name and second omitted.
+    println("$person are $age4 years old.")
+}
+
+fun max1(a: Int, b: Int): Int {
+    return if (a >= b) a else b
+}
+fun max2(a: Int, b: Int): Int =
+    if (a >= b) a else b
+
+fun max3(a: Int, b: Int) = if (a >= b) a else b
+
+fun hello1(name: String = ""):Unit { //Unit is not needed
+    if (name == "") {
+        println("Hello, World!")
+        return
+    }
+    println("Hello, $name!")
+}
+
+fun hello2(name: String = "") {
+    val who = if (name == "") "World" else name
+    println("Hello, $who!")
+}
+
+fun hello3(name: String = "World") {
+    println("Hello, $name!")
+}
+
+
+//fun readAge(name: String, default: Int): Int {
+fun readAge(name: String, default: Int = 18): Int {
+    print("How old is $name? ")      // Displays the question with the name.
+    val input = readln().trim()      // Reads the input ignoring the spaces.
+    if (input.length==0 || input[0] !in '0'..'9') // If no input or invalid.
+        return default               // Returns the default value.
+    return input.toInt()             // Converts the input to Int and returns it.
+}
+
+fun _9_testLambdas() {
+    fun upperOf(c: Char): Char = if (c in 'a'..'z') c - ('a'-'A') else c
+    fun lowerOf(c: Char): Char = if (c in 'A'..'Z') c + ('a'-'A') else c
+
+    var fx = ::upperOf  // Variable that stores a reference to one function.
+    println(fx('h')) // --> H
+    fx = ::lowerOf
+    println(fx('M')) // --> m
+
+    //function type
+    var fx2: (Char)->Char = ::upperOf
+
+    //Functions as parameters
+    fun printlnIn(text: String, charMapper: (Char)->Char) {
+        for (c in text)
+            print(charMapper(c))
+        println()
+    }
+
+    printlnIn("Hello, World!", ::upperOf) // --> HELLO, WORLD!
+    printlnIn("Hello, World!", ::lowerOf) // --> hello, world!
+
+    //Functions that return functions
+    fun charMapper(upper: Boolean): (Char)->Char =
+        if (upper) ::upperOf
+        else ::lowerOf
+
+    printlnIn("Hello, World!", charMapper(upper = true)) // --> HELLO, WORLD!
+
+    //Lambda expressions
+    printlnIn(
+        "Hello, World!",
+        { c -> if (c in 'A'..'Z') c + ('a'-'A') else c }
+    ) // --> hello, world!
+
+    //Trailing function
+    printlnIn("Hello, World trailing function!") {
+        if (it in 'a'..'z') it - ('a'-'A') else it
+    } // --> HELLO, WORLD!
+
+    //collection.filter
+    val grades = listOf(7, 13, 5, 18, 3, 14, 11, 15)
+    val passing = grades.filter { it >= 10 }
+    println(passing) // --> [13, 18, 14, 11, 15]
+
+    //Possible implementation of filter calling the function argument
+    fun List<Int>.filter(selector: (Int)->Boolean): List<Int> {
+        val result = mutableListOf<Int>()
+        for (item in this)
+            if (selector(item)) result.add(item)
+            else println("Removing $item")
+        return result  // Implicit conversion to List<Int>
+    }
+
+    val grades2 = listOf(7, 13, 5, 18, 3, 14, 11, 15)
+    val passing2 = grades2.filter { it >= 10 }
+    println(passing2) // --> [13, 18, 14, 11, 15]
+}
+
+fun _10_testClasses() {
+    class Thing
+
+    val oneThing = Thing()
+    println(oneThing)      // --> Thing@5b480cf9
+
+    val otherThing = Thing()
+    println(otherThing)      // --> Thing@6f496d9f
+    println(oneThing == otherThing) // --> false
+
+    //Properties in classes
+    class Circle(val radius: Double = 0.0) {
+        val pi = 3.14159         // Should this value belong to each object?
+        val area = pi * radius * radius
+        //or redefining the getter accessor
+        val area2: Double
+            get() = pi * radius * radius
+    }
+
+    val c1 = Circle(5.0)
+    println("radius=${c1.radius}, area=${c1.area}") // --> radius=5.0, area=78.53975
+
+    //Moving circle with mutable state
+    //Check declaration First
+    val c2 = MovingCircle(5.0)
+    println("radius=${c2.radius}, area=${c2.area}") // --> radius=5.0, area=78.53975
+    println("center=(${c2.center.x},${c2.center.y})") // --> center=(0.0,0.0)
+    c2.center = Point(10.5, 20.0)
+    println("center=(${c2.center.x},${c2.center.y})") // --> center=(10.5,20.0)
+
+    //Using extension function
+    val c3 = MovingCircle2(5.0)
+    println("radius=${c3.radius}, area=${c3.getArea()}") // --> getArea() instead of area property
+}
+
+class Point(val x: Double, val y: Double)
+val origin = Point(0.0, 0.0)
+const val PI = 3.14159 // Why use const and not just val ??  Compile time constant
+
+class MovingCircle(val radius: Double){
+    var center: Point = origin        // Mutable property
+    val area = PI * radius * radius   // Computed in object creation and stored
+}
+fun MovingCircle.move(dx: Double, dy: Double) {
+    center = Point(center.x + dx, center.y + dy)
+}
+
+
+class MovingCircle2(val radius: Double, at: Point = origin){
+    var center: Point = at        // Mutable property
+    //or redefining the setter
+    var center2: Point = at
+        set(point) { if (point.x >= 0 && point.y >= 0) field = point }
+    // check backing field and backing properties
+    //https://kotlinlang.org/docs/properties.html#backing-properties
+
+    //val area = PI * radius * radius   // Computed in object creation and stored
+}
+fun MovingCircle2.getArea() = PI * radius * radius

@@ -43,3 +43,10 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/.idea/AndroidProjectSystem.xml
+/.idea/copilot.data.migration.agent.xml
+/.idea/copilot.data.migration.edit.xml
+/.idea/gradle.xml
+/.idea/misc.xml
+/.idea/kotlinc.xml
+/.idea/vcs.xml
