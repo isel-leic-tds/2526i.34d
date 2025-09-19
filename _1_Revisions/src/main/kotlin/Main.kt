@@ -5,23 +5,31 @@ package isel.tds
 fun main() {
 //    _01_helloWorld()
 
-    _2_testValAndVars()
+//    _2_testValAndVars()
+//
+//    _3_testBasicTypes()
+//
+//    _4_testRanges()
+//
+//    _5_testIfsAndWhens()
+//
+//    _6_testCollections()
+//
+//    _7_testLoops()
+//
+//    _8_testFunctions()
+//
+//    _9_testLambdas()
+//
+//    _10_testClasses()
+//
+//    _11_testHirerarchy()
+//
+//    _12_testDataClasses()
+//
+//    _13_testEnums()
 
-    _3_testBasicTypes()
-
-    _4_testRanges()
-
-    _5_testIfsAndWhens()
-
-    _6_testCollections()
-
-    _7_testLoops()
-
-    _8_testFunctions()
-
-    _9_testLambdas()
-
-    _10_testClasses()
+    _14_testNullable()
 }
 
 private fun _01_helloWorld() {
@@ -608,3 +616,173 @@ class MovingCircle2(val radius: Double, at: Point = origin){
     //val area = PI * radius * radius   // Computed in object creation and stored
 }
 fun MovingCircle2.getArea() = PI * radius * radius
+
+fun _11_testHirerarchy() {
+
+    // Base class
+    open class Animal(val name: String) {
+        open fun sound(): String {
+            return "Unknown sound"
+        }
+    }
+
+    // Derived classes
+    class Dog(name: String) : Animal(name) {
+        override fun sound(): String {
+            return "Bark"
+        }
+    }
+
+    class Cat(name: String) : Animal(name) {
+        override fun sound(): String {
+            return "Meow"
+        }
+    }
+
+    class Cow(name: String) : Animal(name) {
+        override fun sound(): String {
+            return "Moo"
+        }
+    }
+
+    val cow = Cow("Bessie")
+
+    println(cow.name)
+    println(cow.sound())
+    val cowAnimal = cow is Animal
+    val anyCow :Any = cow
+    //val cowCat = cow is Cat   // Error: Inconvertible types and Compiler already knows its a cow
+    val cowCat = anyCow is Cat
+    val cowCow = cow is Cow
+    println("cowAnimal=$cowAnimal, cowCat=$cowCat, cowCow=$cowCow")
+}
+
+fun _12_testDataClasses() {
+    data class Point(val x: Double, val y: Double)
+
+    //test toString
+    val p1 = Point(1.5, 2.0)
+    println(p1) // --> Point(x=1.5, y=2.0)   The Same as: println(p1.toString())
+    println("p1 = $p1") // --> p1 = Point(x=1.5, y=2.0)
+//    fun toString() = "Point(x=$x, y=$y)"
+
+    //test equals
+    val p2 = Point(1.5, 2.0)
+    println("p1==p2: ${p1 == p2}") // --> p1==p2: true
+    val p3 = Point(2.0, 2.0)
+    println(p3.equals(p1)) // --> false
+//    fun equals(other: Any?) = other is Point && x == other.x && y == other.y
+
+    //test copy
+    val p4 = p1.copy()
+    println(p4) // --> Point(x=1.5, y=2.0)
+    println(p1.copy(y=0.0)) // --> Point(x=1.5, y=0.0)
+//    fun copy(x: Double = this.x, y: Double = this.y) = Point(x, y)
+
+    //Create a new dummy data class to show the java decompiled
+}
+
+
+enum class Direction { NORTH, SOUTH, EAST, WEST }
+
+enum class Direction2(val dx: Int, val dy: Int) {
+    NORTH(0,-1), SOUTH(0,+1), EAST(+1,0), WEST(-1,0);
+
+    fun reversed(): Direction2 = when(this) {
+        NORTH -> SOUTH
+        SOUTH -> NORTH
+        EAST -> WEST
+        WEST -> EAST
+    }
+}
+fun _13_testEnums()
+{
+
+    //test Enum
+    val dir = Direction.SOUTH
+    println("Ordinal: ${dir.ordinal}") // --> Ordinal: 1
+    println("Name: ${dir.name}") // --> Name: SOUTH
+    println(dir) // --> SOUTH
+    println(Direction.entries) // --> [NORTH, SOUTH, EAST, WEST]
+
+    //test Enum with properties and methods
+    val dir2 = Direction2.SOUTH
+    println("original: $dir2, reversed: ${dir2.reversed()}")
+}
+
+
+fun _14_testNullable() {
+    //---------------------------------------------------------------------//
+    //Segurança na utilização de null
+    val personAges: Map<String,Int> = mapOf("Ana" to 46, "Luis" to 27, "João" to 15)
+    println(personAges["Luis"])   // --> 27
+    println(personAges["Pedro"])  // --> null
+
+    //---------------------------------------------------------------------//
+//    Tipos que podem ter o valor null
+    fun add1(value: Int) = value + 1
+    fun add2(value: Int?) = value?.plus(1)
+
+    var days = 30 // Number of days in a month (type Int inferred)
+// days = null ⇒  Error: Null can not be a value of type Int
+    var daysOrNull : Int? = 30
+    daysOrNull = null     // OK: Int? is a nullable type
+
+    println(add1(days))     // --> 31
+// println(add1(daysOrNull)) ⇒ Error: Type mismatch in argument
+    add2( days)
+
+//    V1
+//    fun isNotEmpty(text: String?): Boolean =
+//        // text.length > 0 ⇒  Error: Cannot access 'length' if text is null
+
+//    V2
+//    fun isNotEmpty(text: String?): Boolean =
+//        if (text != null) text.length > 0 else false
+
+//    V3
+//    fun isNotEmpty(text: String?) =  text != null && text.length > 0
+
+    //    V4
+    fun isNotEmpty(text: String?) =  (text?.length ?: 0)  > 0
+
+    println(isNotEmpty(null))    // --> false
+    println(isNotEmpty(""))      // --> false
+    println(isNotEmpty("     ")) // --> true
+    println(isNotEmpty("abc"))   // --> true
+
+    //---------------------------------------------------------------------//
+    //Operador Elvis
+    //    Acesso seguro a propriedades ou funções
+    fun printTextNotNullable(maybeText: String) = println(maybeText ?: "")
+    fun printText(maybeText: String?) = printTextNotNullable(maybeText ?: "")
+
+    printText("abc")    // --> abc
+    printText(null)     // --> (empty line)
+
+    fun isNotEmpty2(text: String?) =  (text?.length ?: 0) > 0
+
+//    Operador !! (double bang)
+    val personAges2: Map<String,Int> = mapOf("Ana" to 46, "Luis" to 27, "João" to 15)
+    val ageOrNull: Int? = personAges2["Luis"] // ageOrNull is always 27 for "Luis"
+    val age: Int = ageOrNull!!  // age is now an Int, not an Int? as ageOrNull
+
+    try{
+        val ageOrNull2: Int? = personAges2["Luis2"] // ageOrNull is always 27 for "Luis"
+        val age: Int = ageOrNull2!!  // age is now an Int, not an Int? as ageOrNull
+    }catch (e: NullPointerException){
+        println("Caught NullPointerException")
+    }
+
+//    Check
+    try {
+        val age2 = checkNotNull(null) { "Age of Luis is missing" }
+    }catch (e: IllegalStateException){
+        println("Caught IllegalStateException ${e.message}")
+    }
+    try {
+        val age2 = requireNotNull(null) { "Age of Luis is missing" }
+    }catch (e: IllegalArgumentException){
+        println("Caught IllegalStateException ${e.message}")
+    }
+}

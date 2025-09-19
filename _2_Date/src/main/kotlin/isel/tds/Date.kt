@@ -1,0 +1,28 @@
+package isel.tds;
+
+
+//class Date {
+//    val day: Int
+//    val month: Int
+//    val year: Int
+//
+//    constructor(y:Int, m:Int, d:Int){
+//        year = y
+//        month = m
+//        day = d
+//    }
+//}
+
+//class Date (val year: Int, val month: Int, val day: Int){
+//
+//    constructor(y: Int, m: Int): this(y, m, 1)
+//    constructor(y: Int): this(y, 1, 1)
+//}
+
+class Date (val year: Int, val month: Int = 1, val day: Int = 1){
+    init{
+        require( year>0){"Invalid year"}
+        require(month>0) {"Invalid month"}
+        require(day>0) { "Invalid day"}
+    }
+}
