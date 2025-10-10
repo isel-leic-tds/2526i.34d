@@ -46,3 +46,6 @@ bin/
 /.idea/AndroidProjectSystem.xml
 /.idea/copilot.data.migration.agent.xml
 /.idea/copilot.data.migration.edit.xml
+
+.idea
+**/.idea

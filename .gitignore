@@ -32,3 +32,6 @@ _1_Revisions/.idea/gradle.xml
 _1_Revisions/.idea/kotlinc.xml
 _1_Revisions/.idea/misc.xml
 _1_Revisions/.idea/vcs.xml
+
+.idea
+**/.idea
