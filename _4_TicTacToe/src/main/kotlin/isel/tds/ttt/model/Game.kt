@@ -8,25 +8,40 @@ val EMPTY = null
 
 data class Game(
     val currentGameStarterPlayer: Player = Player.X,
-    val turn: Player = currentGameStarterPlayer,
+//    val turn: Player = currentGameStarterPlayer,
     val board: List<Player?> = listOf(
         EMPTY, EMPTY, EMPTY,
         EMPTY, EMPTY, EMPTY,
         EMPTY, EMPTY, EMPTY
-        )
+        ),
+    val gameState: GameState = Run(turn=currentGameStarterPlayer)
 )
 
-fun Game.play(pos: Position): Game {
-    val newBoard = board.mapIndexed { idx, cellContent ->
-        if (idx==pos.index ) turn else cellContent
+sealed class GameState
+
+class Run(val turn: Player): GameState()
+object Draw: GameState()
+class Win(val winner: Player): GameState()
+
+fun Game.play(pos: Position): Game = when(gameState){
+    is Run -> {
+        check(canPLay(pos)) { "Invalid Play" }
+        val newBoard = board.mapIndexed { idx, cellContent ->
+            if (idx == pos.index) this.gameState.turn else cellContent
+        }
+        this.copy(board = newBoard, gameState=when{
+            isWinner(gameState.turn) -> Win(winner=gameState.turn )
+            isDraw() -> Draw
+            else -> Run(turn = gameState.turn.other())
+        })
     }
-    return this.copy( turn = this.turn.other(), board = newBoard)
+    is Win, Draw -> error("Game is already finished")
 }
 
-fun Game.new(): Game
+fun Game.restartGame(): Game
 = Game( currentGameStarterPlayer = currentGameStarterPlayer.other())
 
-fun Game.canPLay(pos: Position) =
+fun Game.canPLay(pos: Position): Boolean =
     board[pos.index] == EMPTY &&
         !isWinner(Player.X) &&
         !isWinner(Player.O)
