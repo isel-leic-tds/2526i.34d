@@ -3,8 +3,14 @@ package isel.tds.isel.tds.ttt.model
 
 class Position private constructor(val index: Int) {
 
+    val row: Int get() = index / BOARD_SIZE  // row in (0..<BOARD_SIZE)
+    val col: Int get() = index % BOARD_SIZE  // col in (0..<BOARD_SIZE)
+    val backSlash get() = row == col         // Is in principal diagonal
+    val slash get() = row+col == BOARD_SIZE-1// Is in secondary diagonal
+
+
     companion object {
-        private val positionvalues: List<Position>
+        val positionvalues: List<Position>
             = List(BOARD_TOTAL_CELLS)
                 {idx -> Position(idx)}
 
@@ -22,5 +28,6 @@ class Position private constructor(val index: Int) {
     }
 }
 
+fun Int.toPositionOrNull() = Position.positionvalues.getOrNull(this)
 fun String.toPosition() = Position(this.toInt())
 fun Int.toPosition() = Position(this)
