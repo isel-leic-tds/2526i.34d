@@ -1,10 +1,9 @@
-package isel.tds.isel.tds.ttt.model.ui.console
+package isel.tds.isel.tds.ttt.ui.console
 
 import isel.tds.isel.tds.ttt.model.BOARD_TOTAL_CELLS
 import isel.tds.isel.tds.ttt.model.Game
 import isel.tds.isel.tds.ttt.model.restartGame
 import isel.tds.isel.tds.ttt.model.play
-import isel.tds.isel.tds.ttt.model.toPosition
 import isel.tds.isel.tds.ttt.model.toPositionOrNull
 import kotlin.system.exitProcess
 
@@ -79,4 +78,16 @@ private val New = Command(commandHelpMsg = "New - creates a new game or restarts
 private val Score = Command(  commandHelpMsg = "SCORE - shows the score")
 { _, game ->
     game.also { game -> game?.showScore() }
+}
+
+private val Save = Command(  commandHelpMsg = "Save - Save the game state to a file")
+{ _, game ->
+//    st.create( name, game)
+    TODO()
+}
+
+private val Load = Command(  commandHelpMsg = "Load - Load the game state to a file")
+{ _, game ->
+//    val readGame = st.read(name)
+    TODO()
 }

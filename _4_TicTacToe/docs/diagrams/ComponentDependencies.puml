@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+
+package "console" {
+    [AppTTTConsole.kt]
+    [Command.kt]
+    [Input.kt]
+    [Output.kt]
+    [AppTTTConsole.kt] ..> [Command.kt]
+    [AppTTTConsole.kt] ..> [Input.kt]
+    [AppTTTConsole.kt] ..> [Output.kt]
+}
+
+package "model" {
+    [Game.kt]
+    [Player.kt]
+    [Position.kt]
+    [Game.kt] ..> [Player.kt]
+    [Game.kt] ..> [Position.kt]
+}
+
+[AppTTTConsole.kt] -> [Game.kt]
+[Command.kt] -> [Game.kt]
+[Output.kt] -> [Game.kt]
+[Output.kt] -> [Position.kt]
+
+@enduml
+

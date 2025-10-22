@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+
+hide empty members
+
+class Game
+
+enum Player
+
+Game o-- Player : currentGameStarterPlayer
+
+class Board <<(T)>>
+<> MapEntry
+Board --> "*" MapEntry
+MapEntry --> Position : key
+Player <- MapEntry : value
+
+Game *- Board : board
+
+class GameState <<sealed>>
+Game *- GameState
+
+GameState <|-- Draw
+GameState <|-- Run
+GameState <|-- Win
+
+class Draw <<(O,orange)>>
+
+Run o-- Player: turn
+Win o-- Player: winner
+
+@enduml

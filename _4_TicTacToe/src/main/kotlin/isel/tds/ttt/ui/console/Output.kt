@@ -1,9 +1,8 @@
-package isel.tds.isel.tds.ttt.model.ui.console
+package isel.tds.isel.tds.ttt.ui.console
 
 import isel.tds.isel.tds.ttt.model.BOARD_SIZE
 import isel.tds.isel.tds.ttt.model.Draw
 import isel.tds.isel.tds.ttt.model.Game
-import isel.tds.isel.tds.ttt.model.Player
 import isel.tds.isel.tds.ttt.model.Position
 import isel.tds.isel.tds.ttt.model.Run
 import isel.tds.isel.tds.ttt.model.Win

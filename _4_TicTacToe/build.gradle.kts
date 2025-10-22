@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("com.squareup.okio:okio:3.15.0")
+
 }
 
 tasks.test {

@@ -1,4 +1,4 @@
-package isel.tds.isel.tds.ttt.model.ui.console
+package isel.tds.isel.tds.ttt.ui.console
 
 import isel.tds.isel.tds.ttt.model.Game
 

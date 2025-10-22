@@ -1,4 +1,4 @@
-package isel.tds.isel.tds.ttt.model.ui.console
+package isel.tds.isel.tds.ttt.ui.console
 
 data class LineCommand(val cmd: String, val args: List<String>)
 fun readCommand(): LineCommand {

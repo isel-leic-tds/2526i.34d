@@ -1,8 +1,8 @@
 package isel.tds.ttt.model
 
 import isel.tds.isel.tds.ttt.model.Player
-import org.junit.jupiter.api.Assertions.*
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class PlayerTest {
     @Test
