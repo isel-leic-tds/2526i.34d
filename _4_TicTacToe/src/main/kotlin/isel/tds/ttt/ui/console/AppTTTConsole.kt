@@ -21,7 +21,7 @@ class AppTTTConsole {
                 if(game == null){
                     println("create a game to start playing")
                 }else {
-                    game?.show()
+                    game.show()
                 }
             }catch(e: Exception){
                 e.printStackTrace()
