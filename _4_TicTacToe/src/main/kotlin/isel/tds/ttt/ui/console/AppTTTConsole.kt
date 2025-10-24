@@ -1,11 +1,14 @@
 package isel.tds.isel.tds.ttt.ui.console
 
 import isel.tds.isel.tds.ttt.model.Game
+import isel.tds.isel.tds.ttt.storage.GameSerializer
+import isel.tds.isel.tds.ttt.storage.TextFileStorage
 
 class AppTTTConsole {
     fun run() {
         var game: Game? = null
-        val commands: Map<String, Command> = getAllCommands()
+
+        val commands: Map<String, Command> = getAllCommands(TextFileStorage("savedGames", GameSerializer))
         while (true) {
             try{
                 val (cmd, args) = readCommand()

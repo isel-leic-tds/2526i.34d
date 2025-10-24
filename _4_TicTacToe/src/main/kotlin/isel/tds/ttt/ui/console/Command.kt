@@ -5,6 +5,7 @@ import isel.tds.isel.tds.ttt.model.Game
 import isel.tds.isel.tds.ttt.model.restartGame
 import isel.tds.isel.tds.ttt.model.play
 import isel.tds.isel.tds.ttt.model.toPositionOrNull
+import isel.tds.isel.tds.ttt.storage.Storage
 import kotlin.system.exitProcess
 
 
@@ -38,11 +39,27 @@ import kotlin.system.exitProcess
 //    }
 //}
 //
-fun getAllCommands(): Map<String, Command> = mapOf(
+fun getAllCommands(st: Storage<String, Game>): Map<String, Command> = mapOf(
     "PLAY" to Play,
     "NEW" to New,
     "HELP" to Help,
     "SCORE" to Score,
+    "SAVE" to Command("SAVE <name> - Save the game state to file")
+    { args, game ->
+        val name = requireNotNull(args.firstOrNull()) { "Missing name" }
+        val isValidName = name.matches( Regex("[a-zA-Z][a-zA-Z0-9_]*") )
+        require(isValidName) { "Invalid name $name" }
+        game?.also{ st.create(name, game) }
+//            st.create(name, game)
+//            return game
+    },
+    "LOAD" to Command("LOAD <name> - Loads the game state from file")
+    { args, game ->
+        val name = requireNotNull(args.firstOrNull()) { "Missing name" }
+        val isValidName = name.matches( Regex("[a-zA-Z][a-zA-Z0-9_]*") )
+        require(isValidName) { "Invalid name $name" }
+        checkNotNull(st.read(name)){"Game $name not found!"}
+    },
     "EXIT" to Exit
 )
 
@@ -61,10 +78,29 @@ private val Play = Command(  commandHelpMsg = "PLAY <position> - plays the game 
         game.play(pos)
     }
 
+object DummyStorage: Storage<String, Game> {
+    override fun create(k: String, data: Game) {
+        TODO("Not yet implemented")
+    }
+
+    override fun read(k: String): Game? {
+        TODO("Not yet implemented")
+    }
+
+    override fun update(k: String, data: Game) {
+        TODO("Not yet implemented")
+    }
+
+    override fun delete(k: String) {
+        TODO("Not yet implemented")
+    }
+
+}
+
 private val Help = Command(  commandHelpMsg = "HELP - print the commands")
     { args, game ->
         println("")
-        getAllCommands().forEach { key: String, cmd: Command -> println(cmd.commandHelpMsg) }
+        getAllCommands(DummyStorage).forEach { key: String, cmd: Command -> println(cmd.commandHelpMsg) }
         println("")
         game
     }
@@ -78,16 +114,4 @@ private val New = Command(commandHelpMsg = "New - creates a new game or restarts
 private val Score = Command(  commandHelpMsg = "SCORE - shows the score")
 { _, game ->
     game.also { game -> game?.showScore() }
-}
-
-private val Save = Command(  commandHelpMsg = "Save - Save the game state to a file")
-{ _, game ->
-//    st.create( name, game)
-    TODO()
-}
-
-private val Load = Command(  commandHelpMsg = "Load - Load the game state to a file")
-{ _, game ->
-//    val readGame = st.read(name)
-    TODO()
 }

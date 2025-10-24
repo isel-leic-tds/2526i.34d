@@ -8,7 +8,7 @@ interface Storage<Key, Data> {
      * @param data the data to store.
      * @throws IllegalStateException if the key already exists.
      */
-    fun create(k: Key, data: Data)
+    fun create(k: Key, data: Data): Unit
     /**
      * Reads an entry from the storage.
      * @param k the key of the entry.
@@ -30,7 +30,3 @@ interface Storage<Key, Data> {
     fun delete(k: Key)
 }
 
-interface Serializer<Data>{
-    fun serialize(d: Data): String
-    fun deserialize(txt: String): Data
-}

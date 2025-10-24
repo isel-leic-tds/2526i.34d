@@ -21,9 +21,9 @@ private fun Score.advance(player: Player?): Score =
 
 sealed class GameState
 
-class Run(val turn: Player): GameState()
-object Draw: GameState()
-class Win(val winner: Player): GameState()
+data class Run(val turn: Player): GameState()
+data object Draw: GameState()
+data class Win(val winner: Player): GameState()
 
 fun Game.play(pos: Position): Game = when(gameState) {
     is Run -> {
