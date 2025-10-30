@@ -1,6 +1,8 @@
 package isel.tds.isel.tds.ttt.ui.console
 
 import isel.tds.isel.tds.ttt.model.BOARD_SIZE
+import isel.tds.isel.tds.ttt.model.Clash
+import isel.tds.isel.tds.ttt.model.ClashRun
 import isel.tds.isel.tds.ttt.model.Draw
 import isel.tds.isel.tds.ttt.model.Game
 import isel.tds.isel.tds.ttt.model.Position
@@ -36,4 +38,12 @@ fun Game.showScore() {
     score.entries.joinToString(",", "Scores:") { (player,points) ->
         " ${player?:"Draws"}=$points"
     }.let(::println)
+}
+
+fun Clash.show(){
+    if (this is ClashRun) {
+        println("Clash: $name Player: $sidePlayer")
+        game.show()
+    }
+    else println("Clash not started")
 }
