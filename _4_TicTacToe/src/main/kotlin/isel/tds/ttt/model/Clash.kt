@@ -16,6 +16,7 @@ class ClashRun(st: GameStorage,
 
 fun ClashRun.play(pos: Position): ClashRun{
     val newGame = game.play(pos)
+    check((game.gameState as Run).turn == sidePlayer) {"Not your turn"}
     st.update(name, newGame)
     return ClashRun(this.st, this.name, this.sidePlayer, newGame)
 }
