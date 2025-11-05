@@ -1,13 +1,15 @@
 package isel.tds.isel.tds.ttt.storage
 
 
+import isel.tds.ttt.storage.Serializer
+import isel.tds.ttt.storage.Storage
 import okio.*
 import okio.Path.Companion.toPath
 
 class TextFileStorage<Key, Data>(
     baseDirectory: String,
     val serializer: Serializer<Data>,
-) : Storage<Key,Data>{
+) : Storage<Key, Data> {
 
     val fs = FileSystem.SYSTEM
 

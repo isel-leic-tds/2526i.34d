@@ -12,7 +12,6 @@ import isel.tds.isel.tds.ttt.model.play
 import isel.tds.isel.tds.ttt.model.refresh
 import isel.tds.isel.tds.ttt.model.start
 import isel.tds.isel.tds.ttt.model.toPositionOrNull
-import isel.tds.isel.tds.ttt.storage.Storage
 import kotlin.system.exitProcess
 
 

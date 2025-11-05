@@ -1,6 +1,6 @@
 package isel.tds.isel.tds.ttt.model
 
-import isel.tds.isel.tds.ttt.storage.Storage
+import isel.tds.ttt.storage.Storage
 
 typealias GameStorage = Storage<Name, Game>
 open class Clash(val st: GameStorage)

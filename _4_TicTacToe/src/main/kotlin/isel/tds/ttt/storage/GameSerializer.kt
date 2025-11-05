@@ -8,6 +8,7 @@ import isel.tds.isel.tds.ttt.model.Win
 import isel.tds.isel.tds.ttt.model.toPlayer
 import isel.tds.isel.tds.ttt.model.toPlayerOrNull
 import isel.tds.isel.tds.ttt.model.toPosition
+import isel.tds.ttt.storage.Serializer
 import kotlin.collections.emptyMap
 
 object GameSerializer: Serializer<Game> {

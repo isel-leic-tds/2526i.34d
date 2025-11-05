@@ -1,4 +1,4 @@
-package isel.tds.isel.tds.ttt.storage
+package isel.tds.ttt.storage
 
 interface Storage<Key, Data> {
     // CRUD Operations

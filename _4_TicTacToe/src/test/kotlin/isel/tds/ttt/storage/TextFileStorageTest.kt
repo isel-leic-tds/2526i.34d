@@ -1,7 +1,7 @@
 package isel.tds.ttt.storage
 
-import isel.tds.isel.tds.ttt.storage.Serializer
-import isel.tds.isel.tds.ttt.storage.Storage
+import isel.tds.ttt.storage.Serializer
+import isel.tds.ttt.storage.Storage
 import isel.tds.isel.tds.ttt.storage.TextFileStorage
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -8,8 +8,8 @@ import isel.tds.isel.tds.ttt.model.Player.X
 import isel.tds.isel.tds.ttt.model.Run
 import isel.tds.isel.tds.ttt.model.toPosition
 import isel.tds.isel.tds.ttt.storage.GameSerializer
-import isel.tds.isel.tds.ttt.storage.Serializer
-import isel.tds.isel.tds.ttt.storage.Storage
+import isel.tds.ttt.storage.Serializer
+import isel.tds.ttt.storage.Storage
 import isel.tds.isel.tds.ttt.storage.TextFileStorage
 import kotlin.test.Test
 import kotlin.test.assertEquals
