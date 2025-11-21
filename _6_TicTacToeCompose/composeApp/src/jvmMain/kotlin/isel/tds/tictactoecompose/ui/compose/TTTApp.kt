@@ -7,6 +7,7 @@ import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.MenuBar
 import isel.tds.tictactoecompose.model.Game
 import isel.tds.tictactoecompose.model.play
+import isel.tds.tictactoecompose.model.restartGame
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -17,9 +18,11 @@ fun FrameWindowScope.TTTApp(onExit: () -> Unit) {
         //TODO: analyse full recomposition when player is swapped
 
         var game by remember { mutableStateOf(Game()) }
-//        var player by remember { mutableStateOf(Player.X) }
+        var showScoreDialog by remember { mutableStateOf(false) }
         MenuBar {
             Menu("Game") {
+                Item("New game", onClick = { game = game.restartGame() })
+                Item("Show score", onClick = { showScoreDialog = !showScoreDialog })
                 Item("Exit", onClick = onExit)
             }
         }
@@ -27,6 +30,10 @@ fun FrameWindowScope.TTTApp(onExit: () -> Unit) {
 
             BoardView(game.board, { pos -> game = game.play(pos) })
             StatusBarView(game.gameState)
+
+            if (showScoreDialog) {
+                ScoreDialog(game.score, { showScoreDialog = false })
+            }
         }
     }
 }

@@ -1,7 +1,5 @@
 package isel.tds.tictactoecompose.model
 
-import kotlin.collections.none
-
 const val BOARD_SIZE = 3
 const val BOARD_TOTAL_CELLS = BOARD_SIZE * BOARD_SIZE
 val EMPTY = null
@@ -12,7 +10,7 @@ typealias Score = Map<Player?, Int>
 data class Game(
     val currentGameStarterPlayer: Player = Player.X,
     val board: Board = emptyMap(),
-    val gameState: GameState = Run(turn=currentGameStarterPlayer),
+    val gameState: GameState = Run(turn = currentGameStarterPlayer),
     val score: Score = (Player.entries + null).associateWith { 0 }
 )
 
@@ -21,11 +19,11 @@ private fun Score.advance(player: Player?): Score =
 
 sealed class GameState
 
-data class Run(val turn: Player): GameState()
-data object Draw: GameState()
-data class Win(val winner: Player): GameState()
+data class Run(val turn: Player) : GameState()
+data object Draw : GameState()
+data class Win(val winner: Player) : GameState()
 
-fun Game.play(pos: Position): Game = when(gameState) {
+fun Game.play(pos: Position): Game = when (gameState) {
     is Run -> {
         check(canPlay(pos)) { "Invalid Play" }
         val newBoard = board + (pos to gameState.turn)
@@ -34,22 +32,29 @@ fun Game.play(pos: Position): Game = when(gameState) {
             newBoard.isDraw() -> Draw
             else -> Run(turn = gameState.turn.other())
         }
-        val newScore = when(newGameState) {
+        val newScore = when (newGameState) {
             is Win -> score.advance(newGameState.winner)
             is Draw -> score.advance(null)
             is Run -> score
         }
-        this.copy(board = newBoard, gameState=newGameState, score = newScore)
+        this.copy(board = newBoard, gameState = newGameState, score = newScore)
     }
+
     is Win, is Draw -> error("Game is already finished")
 }
 
 
-
 fun Game.restartGame(): Game {
-    check( this.gameState is Run)
-    return Game(currentGameStarterPlayer = currentGameStarterPlayer.other(), score = score.advance(this.gameState.turn.other()))
+    return when (this.gameState) {
+        is Run -> Game(
+            currentGameStarterPlayer = currentGameStarterPlayer.other(),
+            score = score.advance(this.gameState.turn.other())
+        )
+
+        is Win, is Draw -> Game(currentGameStarterPlayer = currentGameStarterPlayer.other(), score = score)
+    }
 }
+
 fun Game.canPlay(pos: Position): Boolean =
     !board.containsKey(pos)
 
@@ -79,4 +84,4 @@ fun Board.winnerIn(pos: Position): Boolean {
 /** Assuming isWinner is called before.
  *And isDraw is never called when we already have a winner
  */
-fun Board.isDraw(): Boolean  = this.size ==BOARD_TOTAL_CELLS
+fun Board.isDraw(): Boolean = this.size == BOARD_TOTAL_CELLS
