@@ -10,13 +10,15 @@ import tictactoecompose.composeapp.generated.resources.cross
 
 
 fun main() = application {
+    ExitHandler.registerExitApplication(::exitApplication)
+
     Window(
         state = WindowState(size = DpSize.Unspecified),
-        onCloseRequest = ::exitApplication,
+        onCloseRequest = ExitHandler::runExitApplication,
+        // resizable = false,
         title = "tictactoecompose",
         icon = painterResource(Res.drawable.cross)
     ) {
-
-        TTTApp(::exitApplication)
+        TTTApp()
     }
 }

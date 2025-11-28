@@ -21,7 +21,7 @@ private fun LabeledCell(txt: String, player: Player?) {
 }
 
 @Composable
-fun StatusBarView(gameState: GameState, you: Player) = Row(
+fun StatusBarView(gameState: GameState, you: Player, name: Name) = Row(
     modifier = Modifier.background(Color.LightGray)
         .width(GRID_SIZE)
         .height(STATUS_HEIGHT),
@@ -36,4 +36,6 @@ fun StatusBarView(gameState: GameState, you: Player) = Row(
         is Draw -> "Draw" to null
     }
     LabeledCell(txt, player)
+    Spacer(Modifier.width((30.dp)))
+    Text("on game ${name.toString()}")
 }

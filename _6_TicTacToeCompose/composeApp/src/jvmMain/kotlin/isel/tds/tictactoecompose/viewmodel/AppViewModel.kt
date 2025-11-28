@@ -9,18 +9,19 @@ import isel.tds.tictactoecompose.ui.compose.StartOrJoinType
 class AppViewModel(storage: GameStorage) {
     var clash by mutableStateOf(Clash(storage))
     var showScoreDialog by mutableStateOf(false)
+        private set
     var startOrJoinType: StartOrJoinType? by mutableStateOf(null)
         private set
 
-    val run get() = clash as ClashRun
-    val game: Game get() = run.game
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
 
-    val isRun: Boolean get() = clash is ClashRun
+    val clashRun get() = clash as ClashRun
+    val game: Game get() = clashRun.game
 
-    fun newBoard() {
-        //game = game.restartGame()
-        clash = clash.new()
-    }
+    val isClashRun: Boolean get() = clash is ClashRun
+
+    fun newBoard() = exec(Clash::new)
 
     fun startOrJoinGame(name: Name) {
         if (startOrJoinType == StartOrJoinType.StartDialog)
@@ -35,9 +36,19 @@ class AppViewModel(storage: GameStorage) {
         showScoreDialog = !showScoreDialog
     }
 
-    fun play(pos: Position): Unit {
-        clash = clash.play(pos)
+    private fun exec(action: Clash.() -> Clash) {
+        try {
+            clash = clash.action()
+        } catch (e: TTTFatalException) {
+            cleanup()
+            clash = Clash(clash.st)
+            errorMessage = e.message
+        } catch (e: Exception) {
+            errorMessage = e.message
+        }
     }
+
+    fun play(pos: Position): Unit = exec { play(pos) }
 
     fun hideScore() {
         showScoreDialog = false
@@ -55,18 +66,19 @@ class AppViewModel(storage: GameStorage) {
         startOrJoinType = null
     }
 
-    fun refresh() {
-        clash = clash.refresh()
-    }
+    fun refresh() = exec(Clash::refresh)
+
 
     //    fun canRefresh() = true
     val canRefresh: Boolean
-        get() = isRun && ((game.gameState is Run &&
-                run.sidePlayer != (game.gameState as Run).turn)
+        get() = isClashRun && ((game.gameState is Run &&
+                clashRun.sidePlayer != (game.gameState as Run).turn)
                 || game.gameState is Win || game.gameState is Draw)
 
 
-    fun exit() {
-        clash.deleteIfIsOwner()
+    fun cleanup() = exec(Clash::deleteIfIsOwner)
+
+    fun hideError() {
+        errorMessage = null
     }
 }

@@ -48,7 +48,10 @@ fun Clash.refresh(): ClashRun {
     check(this is ClashRun)
     val readGame = st.read(name)
     check(this.game != readGame) { "No Changes" }
-    checkNotNull(readGame) { "Game with name=$name does not exist" }
+    //checkNotNull(readGame) { "Game with name=$name does not exist" }
+    if (readGame == null) {
+        throw NoStorageException()
+    }
     return ClashRun(st, name, sidePlayer, readGame)
 }
 
@@ -69,7 +72,8 @@ fun Clash.new(): ClashRun {
     return newClash
 }
 
-fun Clash.deleteIfIsOwner() {
+fun Clash.deleteIfIsOwner(): Clash {
     if (this is ClashRun && sidePlayer == Player.X)
         st.delete(name)
+    return this
 }
