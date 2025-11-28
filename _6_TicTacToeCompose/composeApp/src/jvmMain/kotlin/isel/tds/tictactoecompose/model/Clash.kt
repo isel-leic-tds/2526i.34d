@@ -54,10 +54,22 @@ fun Clash.refresh(): ClashRun {
 
 fun Clash.new(): ClashRun {
     check(this is ClashRun) { "Game not started" }
-    check(game.gameState is Run) { "Game is not running" }
-    if (sidePlayer == game.gameState.turn) {
-        return ClashRun(st, name, sidePlayer, game.restartGame())
-    } else {
-        return this
+    val newClash = when (this.game.gameState) {
+        is Run -> {
+            if (sidePlayer == game.gameState.turn) {
+                ClashRun(st, name, sidePlayer, game.restartGame())
+            } else {
+                this
+            }
+        }
+
+        is Win, is Draw -> ClashRun(st, name, sidePlayer, game.restartGame())
     }
+    st.update(name, newClash.game)
+    return newClash
+}
+
+fun Clash.deleteIfIsOwner() {
+    if (this is ClashRun && sidePlayer == Player.X)
+        st.delete(name)
 }

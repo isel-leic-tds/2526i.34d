@@ -27,16 +27,17 @@ fun FrameWindowScope.TTTApp(onExit: () -> Unit) {
             Menu("Game") {
                 Item("Start clash", onClick = vm::showStartDialog)
                 Item("Join clash", onClick = vm::showJoinDialog)
+                Item("Refresh", enabled = vm.canRefresh, onClick = vm::refresh)
                 Item("New game", onClick = vm::newBoard)//{vm.newBoard()})
-                Item("Show score", onClick = vm::toggleShowScore)
-                Item("Exit", onClick = onExit)
+                Item("Show score", enabled = vm.isRun, onClick = vm::toggleShowScore)
+                Item("Exit", onClick = vm::exit) //onExit)
             }
         }
         Column {
 
             if (vm.isRun) {
                 BoardView(vm.game.board, vm::play)//{ pos -> vm.play(pos) })
-                StatusBarView(vm.game.gameState)
+                StatusBarView(vm.game.gameState, vm.run.sidePlayer)
             } else {
                 Box(Modifier.size(GRID_SIZE, GRID_SIZE + STATUS_HEIGHT))
             }

@@ -21,13 +21,15 @@ private fun LabeledCell(txt: String, player: Player?) {
 }
 
 @Composable
-fun StatusBarView(gameState: GameState) = Row(
+fun StatusBarView(gameState: GameState, you: Player) = Row(
     modifier = Modifier.background(Color.LightGray)
         .width(GRID_SIZE)
         .height(STATUS_HEIGHT),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.Center
 ) {
+    LabeledCell("You:", you)
+    Spacer(Modifier.width((30.dp)))
     val (txt, player) = when (gameState) {
         is Run -> "Turn:" to gameState.turn
         is Win -> "Winner:" to gameState.winner

@@ -8,10 +8,6 @@ import isel.tds.tictactoecompose.ui.compose.StartOrJoinType
 
 class AppViewModel(storage: GameStorage) {
     var clash by mutableStateOf(Clash(storage))
-    //TODO remove the start
-//    clash = clash.start(Name("aaa"))
-
-    //var game by mutableStateOf(Game())
     var showScoreDialog by mutableStateOf(false)
     var startOrJoinType: StartOrJoinType? by mutableStateOf(null)
         private set
@@ -20,7 +16,7 @@ class AppViewModel(storage: GameStorage) {
     val game: Game get() = run.game
 
     val isRun: Boolean get() = clash is ClashRun
-    
+
     fun newBoard() {
         //game = game.restartGame()
         clash = clash.new()
@@ -57,5 +53,20 @@ class AppViewModel(storage: GameStorage) {
 
     fun hideStartOrJoinDialog() {
         startOrJoinType = null
+    }
+
+    fun refresh() {
+        clash = clash.refresh()
+    }
+
+    //    fun canRefresh() = true
+    val canRefresh: Boolean
+        get() = isRun && ((game.gameState is Run &&
+                run.sidePlayer != (game.gameState as Run).turn)
+                || game.gameState is Win || game.gameState is Draw)
+
+
+    fun exit() {
+        clash.deleteIfIsOwner()
     }
 }
