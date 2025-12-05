@@ -5,8 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import isel.tds.tictactoecompose.model.*
 import isel.tds.tictactoecompose.ui.compose.StartOrJoinType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import test1.log
 
-class AppViewModel(storage: GameStorage) {
+class AppViewModel(storage: GameStorage, val scope: CoroutineScope) {
     var clash by mutableStateOf(Clash(storage))
     var showScoreDialog by mutableStateOf(false)
         private set
@@ -14,6 +18,9 @@ class AppViewModel(storage: GameStorage) {
         private set
 
     var errorMessage by mutableStateOf<String?>(null)
+        private set
+
+    var isWaiting: Boolean by mutableStateOf(false)
         private set
 
     val clashRun get() = clash as ClashRun
@@ -48,7 +55,10 @@ class AppViewModel(storage: GameStorage) {
         }
     }
 
-    fun play(pos: Position): Unit = exec { play(pos) }
+    fun play(pos: Position): Unit {
+        exec { isWaiting = true; play(pos) }
+        waitForOtherSide()
+    }
 
     fun hideScore() {
         showScoreDialog = false
@@ -66,8 +76,33 @@ class AppViewModel(storage: GameStorage) {
         startOrJoinType = null
     }
 
-    fun refresh() = exec(Clash::refresh)
+//    fun refresh() = exec() {
+//        log("refresh")
+//        var auxClash: Clash? = null
+//        var job = scope.launch {
+//            log("refresh in coroutine")
+//            auxClash = clash.refresh()
+//        }
+//
+//        checkNotNull(auxClash)
+//        auxClash
+//    }
 
+    fun refresh() {
+        scope.launch {
+            try {
+                log("refresh in coroutine")
+                clash = clash.refresh()
+                isWaiting = false;
+            } catch (e: TTTFatalException) {
+                cleanup()
+                clash = Clash(clash.st)
+                errorMessage = e.message
+            } catch (e: Exception) {
+                errorMessage = e.message
+            }
+        }
+    }
 
     //    fun canRefresh() = true
     val canRefresh: Boolean
@@ -80,5 +115,20 @@ class AppViewModel(storage: GameStorage) {
 
     fun hideError() {
         errorMessage = null
+    }
+
+    fun waitForOtherSide() {
+        scope.launch {
+            do {
+                delay(3000)
+                try {
+                    clash = clash.refresh()
+                    isWaiting = false
+                } catch (e: NoChangesException) {
+                } catch (e: Exception) {
+                    errorMessage = e.message
+                }
+            } while (isWaiting)
+        }
     }
 }

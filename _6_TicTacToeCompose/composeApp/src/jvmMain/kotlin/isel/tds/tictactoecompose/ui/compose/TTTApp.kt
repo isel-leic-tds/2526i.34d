@@ -6,14 +6,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.MenuBar
 import isel.tds.tictactoecompose.model.Game
 import isel.tds.tictactoecompose.model.Name
 import isel.tds.tictactoecompose.storage.GameSerializer
-import isel.tds.tictactoecompose.storage.mongo.MongoDriver
-import isel.tds.tictactoecompose.storage.mongo.MongoStorage
+import isel.tds.tictactoecompose.storage.TextFileStorage
 import isel.tds.tictactoecompose.viewmodel.AppViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -23,11 +23,12 @@ fun FrameWindowScope.TTTApp() {
 
     MaterialTheme {
         //TODO: analyse full recomposition when player is swapped
+        var scope = rememberCoroutineScope()
         val vm = remember {
-//            val st=TextFileStorage<Name, Game>("savedGames", GameSerializer)
-            val driver: MongoDriver = MongoDriver("JogoGalo34D")
-            val st = MongoStorage<Name, Game>("savedGames", driver, GameSerializer)
-            val myVm = AppViewModel(st);
+            val st = TextFileStorage<Name, Game>("savedGames", GameSerializer)
+            //val driver: MongoDriver = MongoDriver("JogoGalo34D")
+            //val st = MongoStorage<Name, Game>("savedGames", driver, GameSerializer)
+            val myVm = AppViewModel(st, scope);
             ExitHandler.registerExitHandler(myVm::cleanup);
             myVm
         }
@@ -36,6 +37,8 @@ fun FrameWindowScope.TTTApp() {
                 Item("Start clash", onClick = vm::showStartDialog)
                 Item("Join clash", onClick = vm::showJoinDialog)
                 Item("Refresh", enabled = vm.canRefresh, onClick = vm::refresh)
+                // {scope.launch{vm.refresh()}}) // use withContext(Dispatchers.IO) to change to IO threads
+                // {scope.launch(Dispatchers.IO){vm.refresh()}})
                 Item("New game", onClick = vm::newBoard)//{vm.newBoard()})
                 Item("Show score", enabled = vm.isClashRun, onClick = vm::toggleShowScore)
                 Item("Exit", onClick = ExitHandler::runExitApplication)
@@ -57,5 +60,6 @@ fun FrameWindowScope.TTTApp() {
             }
             vm.errorMessage?.let { msg -> ErrorDialog(msg, vm::hideError) }
         }
+        if (vm.isWaiting) WaitingIndicator()
     }
 }

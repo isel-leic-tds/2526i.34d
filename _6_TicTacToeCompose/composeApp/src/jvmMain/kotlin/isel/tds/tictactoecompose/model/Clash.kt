@@ -1,6 +1,9 @@
 package isel.tds.tictactoecompose.model
 
 import isel.tds.tictactoecompose.storage.Storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import test1.log
 
 typealias GameStorage = Storage<Name, Game>
 
@@ -44,11 +47,16 @@ fun Clash.join(name: Name): ClashRun {
     return ClashRun(st, name, Player.O, readGame)
 }
 
-fun Clash.refresh(): ClashRun {
+suspend fun Clash.refresh(): ClashRun {
     check(this is ClashRun)
-    val readGame = st.read(name)
-    check(this.game != readGame) { "No Changes" }
+    val readGame = withContext(Dispatchers.IO) {
+        log("refresh in coroutine in IO thread")
+        st.read(name)
+    }
+//    check(this.game != readGame) { "No Changes" }
     //checkNotNull(readGame) { "Game with name=$name does not exist" }
+    if (this.game == readGame)
+        throw NoChangesException()
     if (readGame == null) {
         throw NoStorageException()
     }
