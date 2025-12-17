@@ -1,28 +1,40 @@
-This is a Kotlin Multiplatform project targeting Desktop (JVM).
+#Grupo 1 Exame 2324 T2
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-    - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-    - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-      For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-      the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-      Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-      folder is the appropriate location.
+## 1.
+2nd option
 
-### Build and Run Desktop (JVM) Application
+Não é possível criar objectos deste tipo. Por exemplo: val board = Board() provoca erro de compilação.
 
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
+Sealed classes are abstract implicitly
 
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
+## 2.
+3rd option
 
----
+Usa pattern matching em conjunto com smart cast do compilador.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## 3.
+2nd option
+
+Que deve ser chamada numa corrotina e pode suspender a execução até à sua conclusão
+
+## 4.
+2nd option
+
+O tipo Nothing pode ser utilizado para indicar que a função lança sempre exceção.
+
+## 5.
+1st option
+
+A relação entre Closeable e MongoDriver é
+relativa à função close implementada em
+MongoDriver.
+
+## 6.
+4th option
+
+A função push do stack imutável retorna o novo stack, mas a do stack mutável retorna Unit.
+
+## 7.
+4th option
+
+A função lança sempre uma exceção, para qualquer chamada.
